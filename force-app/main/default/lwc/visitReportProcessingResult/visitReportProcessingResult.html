@@ -1,0 +1,35 @@
+<template>
+    <lightning-accordion lwc:if={data} allow-multiple-sections-open>
+        <lightning-accordion-section 
+            for:each={data} 
+            for:item="type" 
+            key={type.uuid} 
+            name={type.apiName} 
+            label={type.meta.labelPlural}>
+            <lightning-layout 
+                multiple-rows="true">
+                <lightning-layout-item 
+                    for:each={type.records} 
+                    for:item="record" 
+                    key={record.uuid} 
+                    padding="around-small" 
+                    size={columnSize}
+                >
+                    <c-visit-report-processing-result-record 
+                        obj-api-name={type.apiName}
+                        record={record}
+                        layout-columns={recordLayoutColumns}
+                        layout-mode={recordLayoutMode}
+                        layout-type={recordLayoutType}
+                        onupdaterecord={hdlUpdateRecord}
+                        ondeleterecord={hdlDeleteRecord}>
+                    </c-visit-report-processing-result-record>
+                </lightning-layout-item>
+            </lightning-layout>
+        </lightning-accordion-section>
+    </lightning-accordion>
+    <div lwc:if={error}>
+        <div>{error.msg}</div>
+        <div>{error.payload}</div>
+    </div>
+</template>

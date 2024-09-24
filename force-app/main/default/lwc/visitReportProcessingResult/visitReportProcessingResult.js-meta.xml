@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Visit Report Processing Result</masterLabel>
+    <description>Visit Report Processing Result</description>
+    <targets>
+        <target>lightning__FlowScreen</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="payload" label="JSON Payload" type="String" role="inputOnly" />
+            <property name="columnSize" label="columnSize" description="12 -> 1" type="Integer" default="6" role="inputOnly" />
+            <property name="recordLayoutColumns" label="recordLayoutColumns" description="1 or 2 or 3" type="Integer" default="3" role="inputOnly" />
+            <property name="recordLayoutMode" label="recordLayoutMode" description="view, edit, readonly" type="String" default="view"  role="inputOnly" />
+            <property name="recordLayoutType" label="recordLayoutType" description="Compact or Full" type="String" default="Compact" role="inputOnly" />
+            <property name="allObjectsOpen" label="allObjectsOpen" type="Boolean" default="true" role="inputOnly" />
+
+            <property name="outputRecords" label="Output Records" type="apex://VisitReportObjectWrapper" role="outputOnly" />
+          <!-- property name="startDate" label="Start Date" type="Date" role="inputOnly" />
+          <property name="account" label="Account Chosen" type="@salesforce/schema/Account" />
+          <property name="annualRevenue" label="Annual Revenue" type="Integer" role="outputOnly" />
+          <property name="name" label="Account Name" type="String" / -->
+        </targetConfig>
+      </targetConfigs>
+</LightningComponentBundle>

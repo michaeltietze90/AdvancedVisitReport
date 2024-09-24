@@ -1,0 +1,77 @@
+<!-- sldsValidatorIgnore -->
+<!--
+  @description       : 
+  @author            : dirk.gronert@salesforce.com
+  @group             : 
+  @last modified on  : 09-03-2024
+  @last modified by  : dirk.gronert@salesforce.com
+-->
+
+<template>
+    <lightning-card variant="Narrow" title={title} icon-name={icon}>
+        <!-- Header -->
+        <template lwc:if={record.Id}>
+            <lightning-button-group slot="actions">
+                <lightning-button-stateful
+                        label-when-off="Full"
+                        label-when-on="Compact"
+                        label-when-hover="Toggle"
+                        selected={isLayoutTypeFull}
+                        onclick={handleLayoutType}>
+                </lightning-button-stateful>
+            </lightning-button-group>
+        </template>
+        <template lwc:else>
+            <lightning-input slot="actions"
+                    type="checkbox-button"
+                    label="Basic option"
+                    name="input1"
+                    onclick={hdlToggleAllChange}>
+            </lightning-input>
+        </template>
+
+        <!-- Body -->
+        <template lwc:if={record.Id}>
+            <div class="slds-p-around_small">
+                <template lwc:if={isLayoutTypeFull}>
+                    <lightning-record-form
+                       class="slds-p-around_small"
+                       record-id={record.Id}
+                       object-api-name={objApiName}
+                       layout-type="Full"
+                       columns={layoutColumns}
+                       mode={layoutMode}
+                       onload={hdlRecordLoaded}>
+                    </lightning-record-form>
+                </template>
+                <template lwc:else>
+                    <lightning-record-form
+                       class="slds-p-around_small"
+                       record-id={record.Id}
+                       object-api-name={objApiName}
+                       layout-type="Compact"
+                       columns={layoutColumns}
+                       mode={layoutMode}
+                       onload={hdlRecordLoaded}>
+                    </lightning-record-form>
+                </template>
+            </div>
+        </template>
+
+        <!-- Footer -->
+        <template lwc:if={areAttributesReady}>
+            <div slot="footer">
+                <c-visit-report-processing-result-record-attr for:each={record.fields} for:item="field"
+                  key={field.apiName}
+                  style="text-align: left;"
+                  property={field}
+                  is-new-record={isNewRecord}
+                  onincludevalue={hdlIncludeAttribute}
+                  onexcludevalue={hdlExcludeAttribute}
+                  is-selected={isAllToggled}
+                ></c-visit-report-processing-result-record-attr>
+            </div>
+        </template>
+
+    </lightning-card>
+</template>

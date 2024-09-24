@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>61.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__HomePage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__AppPage</target>
+        <target>lightning__UtilityBar</target>
+        <target>lightning__FlowScreen</target>  <!-- Expose component to Flows -->
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__FlowScreen">
+            <property name="headline" label="Headline" type="String" default="Voice Transcription" description="Title of the transcription card."/>
+            <property name="iconName" label="Icon Name" type="String" default="utility:mic" description="Icon for the transcription card."/>
+            <property name="openaiKey" label="OpenAI Key" type="String" required="true" description="API Key for GPT-4 or GPT-3.5-Turbo."/>
+            <property name="transcript" label="Transcript" type="String" description="The final transcript from Whisper and GPT-4."/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

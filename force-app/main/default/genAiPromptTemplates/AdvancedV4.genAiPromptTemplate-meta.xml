@@ -1,0 +1,2131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <activeVersion>17</activeVersion>
+    <developerName>AdvancedV4</developerName>
+    <masterLabel>AdvancedV4</masterLabel>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list {!$Input:TimeStamp}.
+
+### Instructions:
+
+1. **Analyze Transcript:** Compare the {!$Input:Transcript} with the {!$Input:RelatedRecordsNamesV2} to check for any spelling mistakes or discrepancies in names. If errors are found, correct them automatically.
+
+2. **Identify Existing Records:** Analyze the transcript to see if any record matches existing ones from {!$Input:RelatedRecordsJsonV2}
+ - If a match is found, return the corresponding ID and update the new field values if mentioned.
+ - If no match is found, suggest creating new records with all the mentioned fields and values.
+
+3. **Name Parsing:** For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records:** If no existing record matches:
+ - For `Opportunities`, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+ - For `Contacts`, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation:** If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new `Task` record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format:** Return a structured JSON output, containing:
+ - A list of records (either new or updated).
+ - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population:** Only populate fields that available in {!$Input:Metadata} and mentioned in the transcript. Avoid adding unnecessary fields or data
+
+### Output Format:
+
+Just the json, nothing else. The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;. Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+ {
+  &quot;RecordType&quot;: &quot;Opportunity&quot;,
+  &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+  &quot;Amount&quot;: &quot;111000&quot;,
+  &quot;NextStep&quot;: &quot;Involve management&quot;,
+  &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+
+ },
+ {
+  &quot;RecordType&quot;: &quot;Opportunity&quot;,
+  &quot;Name&quot;: &quot;Power Tools&quot;,
+  &quot;Amount&quot;: &quot;999&quot;,
+  &quot;NextStep&quot;: &quot;Send material out&quot;
+ },
+ {
+  &quot;RecordType&quot;: &quot;Contact&quot;,
+  &quot;FullName&quot;: &quot;Christian Smith&quot;,
+  &quot;Title&quot;: &quot;VP&quot;,
+  &quot;Department&quot;: &quot;Electronics Department&quot;
+ },
+ {
+  &quot;RecordType&quot;: &quot;Task&quot;,
+  &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+  &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+ }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;p&gt;The meeting included &lt;b&gt;Oskar Tran&lt;/b&gt; and &lt;b&gt;Melanie Lexington&lt;/b&gt;, who was promoted to CTO. A new contact, &lt;b&gt;Christian Smith&lt;/b&gt;, VP of the Electronics Department, was introduced. The &lt;b&gt;40k opportunity&lt;/b&gt; was updated to &lt;b&gt;111k&lt;/b&gt; with the next step to involve management, and a new opportunity called &lt;b&gt;Power Tools&lt;/b&gt; was created with an amount of &lt;b&gt;999&lt;/b&gt;. A task was set to follow up with &lt;b&gt;Chris Post&lt;/b&gt; via email tomorrow.&lt;/p&gt;&quot;
+}
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultOpenAIGPT35Turbo</primaryModel>
+        <status>Published</status>
+        <versionNumber>1</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list {!$Input:TimeStamp}.
+
+### Instructions:
+
+1. **Analyze Transcript:** Compare the {!$Input:Transcript} with the {!$Input:RelatedRecordsNamesV2} to check for any spelling mistakes or discrepancies in names. If errors are found, correct them automatically.
+
+2. **Identify Existing Records:** Analyze the transcript to see if any record matches existing ones from {!$Input:RelatedRecordsJsonV2}
+ - If a match is found, return the corresponding ID and update the new field values if mentioned.
+ - If no match is found, suggest creating new records with all the mentioned fields and values.
+
+3. **Name Parsing:** For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records:** If no existing record matches:
+ - For `Opportunities`, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+ - For `Contacts`, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation:** If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new `Task` record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format:** Return a structured JSON output, containing:
+ - A list of records (either new or updated).
+ - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population:** Only populate fields that available in {!$Input:Metadata} and mentioned in the transcript. Avoid adding unnecessary fields or data
+
+### Output Format:
+
+Just the json, nothing else. The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;. Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+ {
+  &quot;RecordType&quot;: &quot;Opportunity&quot;,
+  &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+  &quot;Amount&quot;: &quot;111000&quot;,
+  &quot;NextStep&quot;: &quot;Involve management&quot;,
+  &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+
+ },
+ {
+  &quot;RecordType&quot;: &quot;Opportunity&quot;,
+  &quot;Name&quot;: &quot;Power Tools&quot;,
+  &quot;Amount&quot;: &quot;999&quot;,
+  &quot;NextStep&quot;: &quot;Send material out&quot;
+ },
+ {
+  &quot;RecordType&quot;: &quot;Contact&quot;,
+  &quot;FullName&quot;: &quot;Christian Smith&quot;,
+  &quot;Title&quot;: &quot;VP&quot;,
+  &quot;Department&quot;: &quot;Electronics Department&quot;
+ },
+ {
+  &quot;RecordType&quot;: &quot;Task&quot;,
+  &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+  &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+ }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;p&gt;The meeting included &lt;b&gt;Oskar Tran&lt;/b&gt; and &lt;b&gt;Melanie Lexington&lt;/b&gt;, who was promoted to CTO. A new contact, &lt;b&gt;Christian Smith&lt;/b&gt;, VP of the Electronics Department, was introduced. The &lt;b&gt;40k opportunity&lt;/b&gt; was updated to &lt;b&gt;111k&lt;/b&gt; with the next step to involve management, and a new opportunity called &lt;b&gt;Power Tools&lt;/b&gt; was created with an amount of &lt;b&gt;999&lt;/b&gt;. A task was set to follow up with &lt;b&gt;Chris Post&lt;/b&gt; via email tomorrow.&lt;/p&gt;&quot;
+}
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>2</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list {!$Input:TimeStamp}.
+
+### Instructions:
+
+1. **Analyze Transcript for Spelling Mistakes:**
+  - Compare the names in the transcript with the names from {!$Input:RelatedRecordsNamesV2}. If you detect any spelling mistakes, automatically correct them to match the closest name in `RelatedRecordsNamesV2`.
+
+2. **Identify Existing Records:**
+  - After correcting names, analyze the transcript and match names with existing records in {!$Input:RelatedRecordsJsonV2}.
+    - If a match is found, return the corresponding record ID and update any mentioned fields such as `Amount`, `CloseDate`, and `NextStep`.
+    - If no match is found, suggest creating new records with all the mentioned fields and values.
+
+3. **Name Parsing:**
+  - For any new contacts, use the first word as the `FirstName` and the last word as the `LastName`. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records:**
+  - If no match is found in `RelatedRecordsJsonV2`, create new records as follows:
+    - For `Opportunities`, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+    - For `Contacts`, capture fields such as `FullName`, `Title`, and `Department`, if available in the transcript.
+
+5. **Task Creation:**
+  - If any tasks are mentioned (e.g., follow-ups, reminders), create a new `Task` record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format:**
+  - Return a structured JSON output containing:
+    - A list of updated records with `RecordType`, `Id`, and updated fields.
+    - A list of new records with `RecordType` and the mentioned fields.
+    - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population:**
+  - Populate only fields available in {!$Input:Metadata} and mentioned in the transcript. Avoid adding unnecessary fields.
+
+### Output Format:
+
+Just the JSON, nothing else. The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}.&quot; Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: &quot;111000&quot;,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: &quot;999&quot;,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FullName&quot;: &quot;Christian Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;p&gt;The meeting included &lt;b&gt;Oskar Tran&lt;/b&gt; and &lt;b&gt;Melanie Lexington&lt;/b&gt;, who was promoted to CTO. A new contact, &lt;b&gt;Christian Smith&lt;/b&gt;, VP of the Electronics Department, was introduced. The &lt;b&gt;40k opportunity&lt;/b&gt; was updated to &lt;b&gt;111k&lt;/b&gt; with the next step to involve management, and a new opportunity called &lt;b&gt;Power Tools&lt;/b&gt; was created with an amount of &lt;b&gt;999&lt;/b&gt;. A task was set to follow up with &lt;b&gt;Chris Post&lt;/b&gt; via email tomorrow.&lt;/p&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>3</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly. 
+
+For time reference, use the timestamp at the end of this list {!$Input:TimeStamp}.
+
+### Instructions:
+
+1. **Analyze Transcript**:  
+  Compare the {!$Input:Transcript} with the {!$Input:RelatedRecordsNamesV2} to check for any spelling mistakes or discrepancies in names. If errors are found, correct them automatically.
+
+2. **Identify Existing Records**:  
+  Analyze the transcript to see if any record matches existing ones from {!$Input:RelatedRecordsJsonV2}.
+  - If a match is found, return the corresponding ID and update the new field values if mentioned.
+  - If no match is found, suggest creating new records with all the mentioned fields and values.
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in {!$Input:Metadata} and mentioned in the transcript. Avoid adding unnecessary fields or data.
+
+### Output Format:
+
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: &quot;111000&quot;,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: &quot;999&quot;,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+ {
+  &quot;RecordType&quot;: &quot;Contact&quot;,
+  &quot;FullName&quot;: &quot;Chris Post&quot;,
+  &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;
+  &quot;Title&quot;: &quot;VP&quot;,
+  &quot;Department&quot;: &quot;Electronics Department&quot;
+ },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FullName&quot;: &quot;Christian Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;p&gt;The meeting included &lt;b&gt;Oskar Tran&lt;/b&gt; and &lt;b&gt;Melanie Lexington&lt;/b&gt;, who was promoted to CTO. A new contact, &lt;b&gt;Christian Smith&lt;/b&gt;, VP of the Electronics Department, was introduced. The &lt;b&gt;40k opportunity&lt;/b&gt; was updated to &lt;b&gt;111k&lt;/b&gt; with the next step to involve management, and a new opportunity called &lt;b&gt;Power Tools&lt;/b&gt; was created with an amount of &lt;b&gt;999&lt;/b&gt;. A task was set to follow up with &lt;b&gt;Chris Post&lt;/b&gt; via email tomorrow.&lt;/p&gt;&quot;
+}
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>4</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly. 
+
+For time reference, use the timestamp at the end of this list {!$Input:TimeStamp}.
+
+### Instructions:
+
+1. **Analyze Transcript**:  
+  Compare the {!$Input:Transcript} with the {!$Input:RelatedRecordsNamesV2} to check for any spelling mistakes or discrepancies in names. If errors are found, correct them automatically.
+
+2. **Identify Existing Records**:  
+  Analyze the transcript to see if any record matches existing ones from {!$Input:RelatedRecordsJsonV2}.
+  - If a match is found, return the corresponding ID and update the new field values if mentioned.
+  - If no match is found, suggest creating new records with all the mentioned fields and values.
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in {!$Input:Metadata} and mentioned in the transcript. Avoid adding unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunity and Tasks
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: &quot;111000&quot;,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: &quot;999&quot;,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+ {
+  &quot;RecordType&quot;: &quot;Contact&quot;,
+  &quot;FullName&quot;: &quot;Chris Post&quot;,
+  &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;
+  &quot;Title&quot;: &quot;VP&quot;,
+  &quot;Department&quot;: &quot;Electronics Department&quot;
+ },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FullName&quot;: &quot;Christian Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;p&gt;The meeting included &lt;b&gt;Oskar Tran&lt;/b&gt; and &lt;b&gt;Melanie Lexington&lt;/b&gt;, who was promoted to CTO. A new contact, &lt;b&gt;Christian Smith&lt;/b&gt;, VP of the Electronics Department, was introduced. The &lt;b&gt;40k opportunity&lt;/b&gt; was updated to &lt;b&gt;111k&lt;/b&gt; with the next step to involve management, and a new opportunity called &lt;b&gt;Power Tools&lt;/b&gt; was created with an amount of &lt;b&gt;999&lt;/b&gt;. A task was set to follow up with &lt;b&gt;Chris Post&lt;/b&gt; via email tomorrow.&lt;/p&gt;&quot;
+}
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>5</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{ &quot;Account&quot;: { &quot;Name&quot;: &quot;Omega, Inc.&quot;, &quot;Id&quot;: &quot;001Wz000006Amb3IAC&quot; }, &quot;Opportunities&quot;: [ ... ], &quot;Contacts&quot;: [ ... ], &quot;CurrentDateTime&quot;: &quot;2024-09-09T13:09:23Z&quot; }.
+
+### Instructions:
+
+1. **Analyze Transcript**:  
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities).
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep`.
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Avoid adding unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, and Tasks.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output:
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;FullName&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FirstName&quot;: &quot;Christian&quot;,
+   &quot;LastName&quot;: &quot;Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Chris Post&lt;/b&gt; and &lt;b&gt;Lauren Bailey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>6</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{ &quot;Account&quot;: { &quot;Name&quot;: &quot;Omega, Inc.&quot;, &quot;Id&quot;: &quot;001Wz000006Amb3IAC&quot; }, &quot;Opportunities&quot;: [ ... ], &quot;Contacts&quot;: [ ... ], &quot;CurrentDateTime&quot;: &quot;2024-09-09T13:09:23Z&quot; }.
+
+### Instructions:
+
+1. **Analyze Transcript**:  
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities).
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep`.
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep`.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` if mentioned in the transcript.
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description`.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Avoid adding unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, and Tasks.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### Example JSON Output: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;FullName&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FirstName&quot;: &quot;Christian&quot;,
+   &quot;LastName&quot;: &quot;Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Chris Post&lt;/b&gt; and &lt;b&gt;Lauren Bailey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>7</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;FullName&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FirstName&quot;: &quot;Christian&quot;,
+   &quot;LastName&quot;: &quot;Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>8</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the first word as the first name and the last word as the last name. Example: &quot;Peter Smith&quot; -&gt; `FirstName: Peter`, `LastName: Smith`.
+
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in {!$Input:Metadata}  &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;FullName&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FirstName&quot;: &quot;Christian&quot;,
+   &quot;LastName&quot;: &quot;Smith&quot;,
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>9</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id` and the FullName field.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the FullName field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `FullName`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in {!$Input:Metadata}  &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;FullName&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;FullName&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>10</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id` and the Name field.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in {!$Input:Metadata}  &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON.
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Name&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>11</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person mentioned in the transcript matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id` and the Name field.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in {!$Input:Metadata}  &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include Contacts, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Name&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>12</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person or name is mentioned in the transcript that matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`. But include the Name of the contact and anything else mentioned about the person.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here {!$Input:Metadata}.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from I{!$Input:Metadata} 
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in {!$Input:Metadata}  &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the {!$Input:Metadata}.
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in `{!$Input:Metadata}` and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include all Contacts spoken updat, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Name&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>13</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person or name is mentioned in the transcript that matches an existing contact, return their `Id`.
+   - If no match is found, return a new contact record without an `Id`. But include the Name of the contact and anything else mentioned about the person.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here Metadata.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from Metadata
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in Metadata &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the Metadata
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in Metadata and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include all Contacts spoken updat, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Name&quot;: &quot;Chris Post&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>14</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person or name is mentioned in the transcript that matches an existing contact, return their `Id`. But dont update the contact name.
+   - If no match is found, return a new contact record without an `Id`. But include the Name of the contact and anything else mentioned about the person.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here Metadata.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from Metadata
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in Metadata &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the Metadata
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in Metadata and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include all Contacts spoken updat, Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>15</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person or name is mentioned in the transcript that matches an existing contact, return their `Id`.  Dont return the name as a field.
+   - If no match is found, return a new contact record without an `Id`. But include the Name of the contact and anything else mentioned about the person.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here Metadata.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from Metadata
+  - For &quot;MD_HILTI_Event__c&quot;, capture fields such as &quot;MD_Description__c&quot;, &quot;Name&quot;, , &quot;MD_Start__c&quot;,&quot;MD_Subject__c&quot; and anything else mentioned in Metadata &quot;Assigned_to__c&quot; should always be Michael Tietze, and &quot;MD_Related_Contacts__c&quot; should be picked from the transcript
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the Metadata
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in Metadata and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include all Contacts Names spoken about in the transcript new and updated , Opportunities, Tasks and MD_HILTI_Event__c.
+- Just the JSON, nothing else.  
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>16</versionNumber>
+    </templateVersions>
+    <templateVersions>
+        <content>You are an AI assistant helping me to update existing records or create new ones based on an audio transcript. For any name mentioned, automatically determine the first and last names, and return them accordingly.
+
+For time reference, use the timestamp at the end of this list:
+{!$Input:RelatedRecordsJsonV2}
+
+### Instructions:
+
+1. **Analyze Transcript**:  {!$Input:Transcript}
+  Compare the transcript with the following records:
+  - `{!$Input:RelatedRecordsNamesV2}`: List of related records to check for spelling mistakes.
+  - `{!$Input:RelatedRecordsJsonV2}`: List of existing records (e.g., Contacts, Opportunities) to extract and match the record id.
+  
+  Automatically correct any spelling mistakes in the transcript.
+
+2. **Identify Existing Records**:  
+  After correcting names, analyze the transcript to identify if any mentioned contacts or opportunities match existing records from `{!$Input:RelatedRecordsJsonV2}`:
+  
+  - **For Contacts**:
+   - If a person or name is mentioned in the transcript that matches an existing contact, return their `Id`.  Dont return the name as a field.
+   - If no match is found, return a new contact record without an `Id`. But include the Name of the contact and anything else mentioned about the person.
+  
+  - **For Opportunities**:
+   - If an opportunity mentioned in the transcript matches an existing opportunity, return its `Id`.
+   - If no match is found, suggest creating a new opportunity record with fields like `Name`, `Amount`, `CloseDate`, and `NextStep` etc further fields can be seen here {!$Input:Metadata}.
+
+
+3. **Name Parsing**:  
+  For new contacts, use the Name field to write the Name, do not populate first or last name
+4. **Create New Records**:  
+  If no existing record matches:
+  - For **Opportunities**, capture fields such as `Name`, `Amount`, `CloseDate`, and `NextStep` and further ones mentioned here Metadata.
+  - For **Contacts**, capture fields such as `Name`, `Title`, and `Department` and further fields from Metadata
+
+5. **Task Creation**:  
+  If any tasks are mentioned in the transcript (e.g., follow-ups, reminders), create a new **Task** record with fields like `Subject`, `ActivityDate`, and `Description` or anything from the Metadata
+
+6. **Output Format**:  
+  Return a structured JSON output, containing:
+  - A list of records (either new or updated).
+  - A summary of the transcript formatted using HTML elements (e.g., `&lt;h1&gt;`, `&lt;ul&gt;`, `&lt;li&gt;`).
+
+7. **Field Population**:  
+  Only populate fields available in Metadata and mentioned in the transcript. Dont ad unnecessary fields or data.
+
+### Output Format:
+
+- Should include all Contacts Names spoken about in the transcript new and updated , Opportunities, Tasks 
+- The output must be a structured JSON, starting with &quot;{&quot; and ending with &quot;}&quot;.  
+- Do not include explanations or anything beyond the structured JSON. Also no &quot;```Json&quot; or something
+
+### This is an Example JSON Output only: Only the json nothing else
+
+{
+ &quot;records&quot;: [
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Id&quot;: &quot;006Wz000002uZkrIAE&quot;,
+   &quot;Amount&quot;: 111000,
+   &quot;NextStep&quot;: &quot;Involve management&quot;,
+   &quot;CloseDate&quot;: &quot;2024-09-30&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Opportunity&quot;,
+   &quot;Name&quot;: &quot;Power Tools&quot;,
+   &quot;Amount&quot;: 999,
+   &quot;NextStep&quot;: &quot;Send material out&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Id&quot;: &quot;003Wz000002l65mIAA&quot;,
+   &quot;Title&quot;: &quot;CFO&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Contact&quot;,
+   &quot;Name&quot;: &quot;Peter Smith&quot;
+   &quot;Title&quot;: &quot;VP&quot;,
+   &quot;Department&quot;: &quot;Electronics Department&quot;
+  },
+  {
+   &quot;RecordType&quot;: &quot;Task&quot;,
+   &quot;Subject&quot;: &quot;Follow up with Chris Post&quot;,
+   &quot;ActivityDate&quot;: &quot;2024-09-10&quot;
+  }
+ ],
+ &quot;Summary&quot;: &quot;&lt;h1&gt;Meeting Summary&lt;/h1&gt;&lt;ul&gt;&lt;li&gt;Meeting with &lt;b&gt;Peter Heinz&lt;/b&gt; and &lt;b&gt;Jack McKinzey&lt;/b&gt;, who was promoted to CFO.&lt;/li&gt;&lt;li&gt;Updated the 40k opportunity to 22,550.&lt;/li&gt;&lt;li&gt;Updated the 55k opportunity to involve management in the next steps.&lt;/li&gt;&lt;li&gt;Created a new opportunity called Super Drills with an amount of 2220.&lt;/li&gt;&lt;li&gt;Set a reminder to follow up tomorrow morning with &lt;b&gt;Chris Post&lt;/b&gt;.&lt;/li&gt;&lt;/ul&gt;&quot;
+}
+
+</content>
+        <inputs>
+            <apiName>RelatedRecordsJsonV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsJson</masterLabel>
+            <referenceName>Input:RelatedRecordsJsonV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>RelatedRecordsNamesV2</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>RelatedRecordsNames</masterLabel>
+            <referenceName>Input:RelatedRecordsNamesV2</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>TimeStamp</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>TimeStamp</masterLabel>
+            <referenceName>Input:TimeStamp</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Metadata</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Metadata</masterLabel>
+            <referenceName>Input:Metadata</referenceName>
+            <required>true</required>
+        </inputs>
+        <inputs>
+            <apiName>Transcript</apiName>
+            <definition>primitive://String</definition>
+            <masterLabel>Transcript</masterLabel>
+            <referenceName>Input:Transcript</referenceName>
+            <required>true</required>
+        </inputs>
+        <primaryModel>sfdc_ai__DefaultGPT4Omni</primaryModel>
+        <status>Published</status>
+        <versionNumber>17</versionNumber>
+    </templateVersions>
+    <type>einstein_gpt__flex</type>
+    <visibility>Global</visibility>
+</GenAiPromptTemplate>

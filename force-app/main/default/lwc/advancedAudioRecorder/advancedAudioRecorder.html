@@ -1,0 +1,19 @@
+<template>
+    <lightning-card title={headline} icon-name={iconName}>
+        <div class="slds-p-around_small">
+            <!-- Bind the transcript value to the textarea and handle resizing -->
+            <textarea 
+                class="slds-publisher__input" 
+                value={transcript}  
+                oninput={resizeTextarea} 
+                rows="1"
+            ></textarea>
+
+            <!-- Audio recorder component that triggers handleSpeechChange -->
+            <c-audio-recorder
+                openai-key={openaiKey}
+                onchange={handleSpeechChange}
+            ></c-audio-recorder>
+        </div>
+    </lightning-card>
+</template>

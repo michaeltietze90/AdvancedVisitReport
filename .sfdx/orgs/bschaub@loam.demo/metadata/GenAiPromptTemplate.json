@@ -1,0 +1,44 @@
+{
+  "status": 0,
+  "result": [
+    {
+      "createdById": "005bn000004IDxNAAW",
+      "createdByName": "Alex Schweizer",
+      "createdDate": "2024-09-23T08:18:02.000Z",
+      "fileName": "genAiPromptTemplates/AdvancedV4.genAiPromptTemplate",
+      "fullName": "AdvancedV4",
+      "id": "0hfbn000001aJUzAAM",
+      "lastModifiedById": "005bn000004IDxNAAW",
+      "lastModifiedByName": "Alex Schweizer",
+      "lastModifiedDate": "2024-09-23T18:24:21.000Z",
+      "manageableState": "unmanaged",
+      "type": "GenAiPromptTemplate"
+    },
+    {
+      "createdById": "005bn000004IDxNAAW",
+      "createdByName": "Alex Schweizer",
+      "createdDate": "2024-08-29T18:08:40.000Z",
+      "fileName": "genAiPromptTemplates/SDO_Sales_Proposal_Introduction_for_a_Quote.genAiPromptTemplate",
+      "fullName": "SDO_Sales_Proposal_Introduction_for_a_Quote",
+      "id": "0hfbn000001JjCAAA0",
+      "lastModifiedById": "005bn000004IDxNAAW",
+      "lastModifiedByName": "Alex Schweizer",
+      "lastModifiedDate": "2024-08-29T18:08:40.000Z",
+      "manageableState": "unmanaged",
+      "type": "GenAiPromptTemplate"
+    },
+    {
+      "createdById": "005bn000004IDxNAAW",
+      "createdByName": "Alex Schweizer",
+      "createdDate": "2024-08-29T18:08:39.000Z",
+      "fileName": "genAiPromptTemplates/SDO_Sales_Generate_a_Sales_Pitch.genAiPromptTemplate",
+      "fullName": "SDO_Sales_Generate_a_Sales_Pitch",
+      "id": "0hfbn000001JjC9AAK",
+      "lastModifiedById": "005bn000004IDxNAAW",
+      "lastModifiedByName": "Alex Schweizer",
+      "lastModifiedDate": "2024-08-29T18:08:39.000Z",
+      "manageableState": "unmanaged",
+      "type": "GenAiPromptTemplate"
+    }
+  ]
+}

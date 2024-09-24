@@ -1,0 +1,33 @@
+<!--
+  @description       : 
+  @author            : dirk.gronert@salesforce.com
+  @group             : 
+  @last modified on  : 09-03-2024
+  @last modified by  : dirk.gronert@salesforce.com
+-->
+<template>
+    <lightning-layout>
+        <lightning-layout-item size="11">
+            <div>
+                <lightning-input
+                    class={formattedInputClass}
+                    type={inputType}  
+                    label={attr.meta.label} 
+                    value={attr.value.new}
+                    onchange={hdlDataChange}>
+                </lightning-input>
+            </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="1">
+            <div style="padding:1.5rem var(--lwc-spacingXxSmall,0.25rem)">
+                <lightning-input 
+                    type="checkbox-button" 
+                    label="Basic option" 
+                    name="input1"
+                    checked={isSelected}
+                    onclick={hdlToggleChange}>
+                </lightning-input>
+            </div>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>

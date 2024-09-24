@@ -1,0 +1,17 @@
+{
+  "status": 0,
+  "result": [
+    {
+      "createdById": "005bn000004IDxNAAW",
+      "createdByName": "Alex Schweizer",
+      "createdDate": "2024-08-28T16:24:07.000Z",
+      "fileName": "liveChatDeployments/SDO_Service_Live_Agent_Community_Chat.liveChatDeployment",
+      "fullName": "SDO_Service_Live_Agent_Community_Chat",
+      "id": "572bn00000LfrkHAAR",
+      "lastModifiedById": "005bn000004IDxNAAW",
+      "lastModifiedByName": "Alex Schweizer",
+      "lastModifiedDate": "2024-08-28T16:24:07.000Z",
+      "type": "LiveChatDeployment"
+    }
+  ]
+}

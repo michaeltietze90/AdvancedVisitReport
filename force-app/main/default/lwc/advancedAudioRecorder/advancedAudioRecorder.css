@@ -1,0 +1,24 @@
+.visualizer-container {
+    width: 100%;
+    height: 50px;
+    background-color: #ff0000;
+    border: 1px solid #ccc;
+    position: relative;
+    overflow: hidden;
+}
+
+.amplitude-meter {
+    width: 100%;
+    height: 100%;
+    background-color: #4CAF50;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.05s ease-out;
+}
+
+textarea.slds-publisher__input {
+    width: 100%;  /* Ensure full width */
+    overflow: hidden;  /* Hide overflow during resizing */
+    resize: both;  /* Allow manual resizing via the bottom-right corner */
+    min-height: 50px;  /* Set a minimum height */
+}

@@ -1,0 +1,6 @@
+.page-header-border {
+    border-bottom: 1px solid var(--slds-g-color-border-base-1, #c9c9c9);
+}
+.alightRight{
+    padding:var(--lwc-varSpacingXxSmall,0.25rem) var(--lwc-spacingXxSmall,0.25rem);
+}
